@@ -32,6 +32,7 @@ boardlist() {
     echo "rock3a"
     echo "rock4b"
     echo "rock4c"
+    echo "rock4c plus"
     echo "rock4se"
     echo "rock5a"
     echo "rock5b"
@@ -75,6 +76,8 @@ elif [ "$BOARD" == "rock5b" ]; then
   BOOTLOADER="boot-rock_5b.bin.gz"
 elif [ "$BOARD" == "rock3a" ]; then
   BOOTLOADER="boot-rock_3a.bin.gz"
+elif [ "$BOARD" == "rock4cplus" ]; then
+  BOOTLOADER="boot-rock_pi_4c_plus.bin.gz"
 fi
 
 echo "----------------------"
@@ -152,9 +155,12 @@ case $choice in
     echo "BOARD=rock4se" >> .config
     ;;
   5)
-    echo "BOARD=rock5a" >> .config
+    echo "BOARD=rock4cplus" >> .config
     ;;
   6)
+    echo "BOARD=rock5a" >> .config
+    ;;
+  7)
     echo "BOARD=rock5b" >> .config
     ;;
   *)
@@ -262,17 +268,17 @@ echo "USERNAME=${USERNAME}" >> .config
 echo "PASSWORD=${PASSWORD}" >> .config
 ##########################################################################################################################
 whiptail --title "Menu" --menu "Choose an option" 20 65 4 \
-"1" "Start interactive shell in the container" \
-"2" "Just build with the given configuration" 2> choice.txt
+"1" "Just build with the given configuration" \
+"2" "Start interactive shell in the container" 2> choice.txt
 
 choice=$(cat choice.txt)
 
 case $choice in
   1)
-    echo "INTERACTIVE=yes" >> .config
+    echo "INTERACTIVE=no" >> .config
     ;;
   2)
-    echo "INTERACTIVE=no" >> .config
+    echo "INTERACTIVE=yes" >> .config
     ;;
   *)
     echo "Invalid option"
@@ -371,7 +377,7 @@ if [[ "$BUILD" == "yes" ]]; then
     docker kill debiancontainer
     docker rm debiancontainer
     docker rmi debian:finest
-    docker build --build-arg "SUITE="$SUITE --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL --build-arg "HEADERS="$HEADERS -t debian:finest -f config/Dockerfile .
+    docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL --build-arg "HEADERS="$HEADERS -t debian:finest -f config/Dockerfile .
 ##########################################################################################################################    
     docker run --platform=aarch64 -dit --name debiancontainer debian:finest /bin/bash  
 
@@ -405,7 +411,7 @@ if [[ "$BUILD" == "yes" ]]; then
     ROOTFS=.rootfs.img
     rootfs_size=$(cat config/rootfs_size.txt)
     echo "Creating an empty rootfs image..."
-    dd if=/dev/zero of=$ROOTFS bs=1M count=$((${rootfs_size} + 750)) status=progress
+    dd if=/dev/zero of=$ROOTFS bs=1M count=$((${rootfs_size} + 1024)) status=progress
     rm config/rootfs_size.txt
     mkfs.ext4 -L rootfs $ROOTFS -F
     mkfs.ext4 ${ROOTFS} -L rootfs -F
@@ -419,7 +425,6 @@ if [[ "$BUILD" == "yes" ]]; then
     rm .loop/root/.dockerenv
     cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/vmlinuz
     cp .loop/root/boot/initrd* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/initrd.img
-    cp .loop/root/lib/linux-image-${BUILD}/rockchip/rk3399-rock-4se.dtb output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/
     umount .loop/root
 
     e2fsck -f ${ROOTFS}

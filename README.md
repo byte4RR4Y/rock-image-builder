@@ -12,7 +12,7 @@ Image builder for radxa Borads
   - rock 5a
   - rock 5b
 
-### This boards work sure if you install latest availible Kernel
+### All the builds for this boards should work if you install the latest availible Kernel
 
 # INSTALLATION:
 ------------------------------------------------------------

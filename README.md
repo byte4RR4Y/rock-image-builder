@@ -11,7 +11,8 @@ Image builder for radxa Borads
   - rock 4se (extensivly tested, works great)
   - rock 5a
   - rock 5b
-This boards work sure if you install latest availible Kernel
+  - 
+### This boards work sure if you install latest availible Kernel
 
 # INSTALLATION:
 ------------------------------------------------------------

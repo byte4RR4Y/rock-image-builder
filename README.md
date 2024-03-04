@@ -6,6 +6,8 @@ Image builder for radxa Borads
 ## Current supported Boards:
   - rock 3a
   - rock 4b
+  - rock 4c
+  - rock 4c plus
   - rock 4se (extensivly tested, works great)
   - rock 5a
   - rock 5b

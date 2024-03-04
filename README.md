@@ -1,4 +1,4 @@
-# rock-image-builder
+# rock-image-builder - Daily updated
 Image builder for radxa Borads
 
 # Please make use of the Issues and Discussions section

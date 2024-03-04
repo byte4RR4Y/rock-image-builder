@@ -59,7 +59,7 @@ You will find your image in the output folder.
   - Lates availible Linux Kernel (Downloaded and Compiled)
 
 ## Kernelheaders
-  - Install it or not
+  - Install it(recommended) or not
 
 ## Currently supported desktops:
   - none(Command line interface/tested)

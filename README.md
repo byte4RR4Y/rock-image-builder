@@ -19,6 +19,7 @@ Image builder for radxa Borads
 # USAGE
 # To build an SD-Card image:
     sudo ./build.sh
+Will guide you through a menu to choose all options.
 
 You will find your image in the output folder.
 

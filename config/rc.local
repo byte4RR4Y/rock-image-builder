@@ -1,0 +1,19 @@
+#! /bin/bash
+
+if [ -e /etc/configboot ]; then
+  hostnamectl set-hostname rock4se
+  chmod u+s /usr/bin/sudo
+  dpkg-reconfigure lightdm
+  dpkg-reconfigure sddm
+  dpkg-reconfigure gdm3
+  rm /etc/configboot
+  touch /etc/default/FIRSTBOOT
+  reboot
+fi
+
+if [ -e /etc/default/FIRSTBOOT ]; then
+  resizeroot
+  touch /etc/resizeroot
+  rm /etc/firstboot
+fi
+exit 0

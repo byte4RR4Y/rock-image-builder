@@ -2,6 +2,7 @@
 
 INTERACTIVE=no
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
+BUILD=no
 ##########################################################################################################################
 usage() {
     echo "Usage: $0 [-h|--help] [-s|--suite SUITE] [-d|--desktop DESKTOP] [-a|--additional ADDITIONAL] [-u|--username USERNAME] [-p|--password PASSWORD] [-b]"
@@ -88,7 +89,7 @@ rm config/rootfs_size.txt
 echo ""
 ##########################################################################################################################
 # Check if arguments are missing
-if [ -z "$SUITE" ] || [ -z "$DESKTOP" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$KERNEL" ] || [ -z "$HEADERS" ]; then
+if [ -z "$SUITE" ] || [ -z "$DESKTOP" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$KERNEL" ] || [ -z "$HEADERS" ] || [ -z "$BOARD" ]; then
 ##########################################################################################################################
 info_text="HELP ME TO IMPROVE THIS PROGRAM\n\nSend an E-mail with suggestions to: byte4rr4y@gmail.com"
 whiptail --title "Information" --msgbox "$info_text" 20 65
@@ -120,6 +121,41 @@ case $choice in
     ;;
   6)
     echo "SUITE=bullseye" > .config
+    ;;
+  *)
+    echo "Invalid option"
+    ;;
+esac
+
+rm choice.txt
+##########################################################################################################################
+whiptail --title "Menu" --menu "Choose a board" 20 65 6 \
+"1" "rock3a" \
+"2" "rock4b(maybe also works for rock4a)" \
+"3" "rock4c" \
+"4" "rock4se" \
+"5" "rock5a" \
+"6" "rock5b" 2> choice.txt
+choice=$(cat choice.txt)
+
+case $choice in
+  1)
+    echo "BOARD=rock3a" >> .config
+    ;;
+  2)
+    echo "BOARD=rock4b" >> .config
+    ;;
+  3)
+    echo "BOARD=rock4c" >> .config
+    ;;
+  4)
+    echo "BOARD=rock4se" >> .config
+    ;;
+  5)
+    echo "BOARD=rock5a" >> .config
+    ;;
+  6)
+    echo "BOARD=rock5b" >> .config
     ;;
   *)
     echo "Invalid option"
@@ -249,6 +285,9 @@ while IFS='=' read -r key value; do
     	SUITE)
     		SUITE="$value"
     		;;
+        BOARD)
+            BOARD="$value"
+            ;;
         KERNEL)
             KERNEL="$value"
             ;;
@@ -273,32 +312,36 @@ while IFS='=' read -r key value; do
 done < .config
 fi
 
+if [ "$BUILD" == "no" ]; then
 ##########################################################################################################################
-display_variables() {
-    whiptail --title "Is this configuration correct?" --yesno \
-    "SUITE=$SUITE\nKERNEL=$KERNEL\nHEADERS=$HEADERS\nDESKTOP=$DESKTOP\nUSERNAME=$USERNAME\nPASSWORD=$PASSWORD\nINTERACTIVE=$INTERACTIVE" \
-    20 65
-}
+    display_variables() {
+        whiptail --title "Is this configuration correct?" --yesno \
+        "SUITE=$SUITE\nBoard=$BOARD\nKERNEL=$KERNEL\nHEADERS=$HEADERS\nDESKTOP=$DESKTOP\nUSERNAME=$USERNAME\nPASSWORD=$PASSWORD\nINTERACTIVE=$INTERACTIVE" \
+        20 65
+    }
 
-# Anzeige der Variablen aufrufen
-display_variables
-
-# Überprüfen der Benutzerantwort
-if [ $? -eq 0 ]; then
-    BUILD=yes
-else
-    BUILD=no
+    display_variables
+    if [ $? -eq 0 ]; then
+        BUILD=yes
+    else
+        BUILD=no
+    fi
 fi
-
 ##########################################################################################################################
 if [[ "$BUILD" == "yes" ]]; then
     while IFS='=' read -r key value; do
         case "$key" in
+    	    SUITE)
+    		    SUITE="$value"
+    		    ;;
             DESKTOP)
                 DESKTOP="$value"
                 ;;
             KERNEL)
                 KERNEL="$value"
+                ;;
+            BOARD)
+                BOARD="$value"
                 ;;
             HEADERS)
                 HEADERS="$value"

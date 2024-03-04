@@ -7,3 +7,11 @@ Image builder for radxa Borads
   - rock 4se
   - rock 5a
   - rock 5b
+
+# INSTALLATION:
+------------------------------------------------------------
+     git clone https://github.com/byte4RR4Y/rock-image-builder
+     cd rock-image-builder
+     chmod +x install.sh
+     sudo ./install.sh
+------------------------------------------------------------

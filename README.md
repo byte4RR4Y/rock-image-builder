@@ -40,6 +40,21 @@ You will find your image in the output folder.
   - Bookworm
   - Bullseye
 
+## Board:
+  - rock3a
+  - rock4b (maybe works for rock4a)
+  - rock4c
+  - rock4se
+  - rock5a
+  - rock5b
+
+## Kernel
+  - Standard Kernel of the Debian Suite
+  - Lates availible Linux Kernel (Downloaded and Compiled)
+
+## Kernelheaders
+  - Install it or not
+
 ## Currently supported desktops:
   - none(Command line interface/tested)
   - xfce     (tested)
@@ -51,6 +66,9 @@ You will find your image in the output folder.
   - unity
   - budgie
   - kde plasma
+
+## Create Sudo User
+  - Choose username and password
 
 # Automating the build process by using the commandline is possible
 Type './build.sh -h'

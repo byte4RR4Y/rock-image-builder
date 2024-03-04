@@ -91,7 +91,7 @@ Type './build.sh -h'
 
 For example to build Debian testing with XFCE with latest Kernel:
 ---------------------------------------------------
-     ./build -s testing -B rock4se -d xfce4 -k latest -H no -u debian -p 123456 -i no -b
+     sudo ./build -s testing -B rock4se -d xfce4 -k latest -H no -u debian -p 123456 -i no -b
 ---------------------------------------------------
 
 

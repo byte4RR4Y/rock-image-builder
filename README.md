@@ -1,6 +1,8 @@
 # rock-image-builder
 Image builder for radxa Borads
 
+# Please make use of the Issues and Discussions section
+
 ## Current supported Boards:
   - rock 3a
   - rock 4b

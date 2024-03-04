@@ -63,8 +63,8 @@ You will find your image in the output folder.
 
 ## Currently supported desktops:
   - none(Command line interface/tested)
-  - xfce     (tested)
-  - gnome    (tested)
+  - xfce     (tested on rock4se)
+  - gnome    (tested on rock4se)
   - mate
   - cinnamon
   - lxqt

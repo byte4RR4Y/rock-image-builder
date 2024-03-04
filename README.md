@@ -32,7 +32,7 @@ You will find your image in the output folder.
   - maybe Ubuntu works too, but the depencies are slightly different(install.sh is not working)
 
 # What you can build?
-##DEBIAN:
+## DEBIAN:
   - Testing
   - Experimental
   - Trixie
@@ -40,7 +40,7 @@ You will find your image in the output folder.
   - Bookworm
   - Bullseye
 
-##Currently supported desktops:
+## Currently supported desktops:
   - none(Command line interface/tested)
   - xfce     (tested)
   - gnome    (tested)

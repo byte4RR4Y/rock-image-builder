@@ -465,7 +465,7 @@ if [[ "$BUILD" == "yes" ]]; then
     ROOTFS=.rootfs.img
     rootfs_size=$(cat config/rootfs_size.txt)
     echo "Creating an empty rootfs image..."
-    dd if=/dev/zero of=$ROOTFS bs=1M count=$((${rootfs_size} + 1536)) status=progress
+    dd if=/dev/zero of=$ROOTFS bs=1M count=$((${rootfs_size} + 1200)) status=progress
     rm config/rootfs_size.txt
     mkfs.ext4 -L rootfs $ROOTFS -F
     mkfs.ext4 ${ROOTFS} -L rootfs -F
@@ -484,7 +484,7 @@ if [[ "$BUILD" == "yes" ]]; then
     fi
     umount .loop/root
 
-    e2fsck -f ${ROOTFS}
+    e2fsck -fvC 0 ${ROOTFS}
     gzip ${ROOTFS}
     mkdir -p output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu
     RELEASE=$(cat config/release)

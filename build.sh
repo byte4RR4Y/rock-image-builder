@@ -5,7 +5,6 @@ TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 BUILD=no
 ##########################################################################################################################
 usage() {
-    echo "Usage: $0 [-h|--help] [-s|--suite SUITE] [-d|--desktop DESKTOP] [-a|--additional ADDITIONAL] [-u|--username USERNAME] [-p|--password PASSWORD] [-b]"
     echo "-------------------------------------------------------------------------------------------------"
     echo "Options:"
     echo "  -h, --help                      Show this help message and exit"
@@ -13,7 +12,6 @@ usage() {
     echo "  --boardlist                     Show list of supported boards"
     echo "  -s, --suite SUITE               Choose the Debian suite (e.g., testing, experimental, trixie)"
     echo "  -k, --kernel latest/standard    Choose which kernel to install"
-    echo "  -H, --headers yes/no            Install Kernel headers"
     echo "  -d, --desktop DESKTOP           Choose the desktop environment."
     echo "                                  (none/xfce4/gnome/cinnamon/lxqt/lxde/unity/budgie/kde)"
     echo "                                  This only has an effect in kombination with -d or --desktop"
@@ -22,7 +20,7 @@ usage() {
     echo "  -i, --interactive yes/no        Start an interactive shell inside the container"
     echo "  -b                              Build the image with the specified configuration without asking"
     echo "-------------------------------------------------------------------------------------------------"
-    echo "For example: $0 -s sid -d none -k latest -u USERNAME123 -p PASSWORD123 -b"
+    echo "For example: $0 -s sid -d none -k latest -B rock3a -u USERNAME123 -p PASSWORD123 -b"
     exit 1
 }
 
@@ -50,10 +48,9 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -h|--help) usage;;
         -B|--board) BOARD="$2"; shift ;;
-        --boardlist) boardlist ;;
+        --boardlist) boardlist;;
         -s|--suite) SUITE="$2"; shift ;;
         -k|--kernel) KERNEL="$2"; shift ;;
-        -H|--headers) HEADERS="$2"; shift ;;
         -d|--desktop) DESKTOP="$2"; shift ;;
         -u|--username) USERNAME="$2"; shift ;;
         -p|--password) PASSWORD="$2"; shift ;;
@@ -90,11 +87,9 @@ rm .rootfs.tar
 rm -rf .rootfs/
 rm config/rootfs_size.txt
 echo ""
+if [ -z "$SUITE" ] || [ -z "$DESKTOP" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$KERNEL" ] || [ -z "$BOARD" ]; then
 ##########################################################################################################################
-# Check if arguments are missing
-if [ -z "$SUITE" ] || [ -z "$DESKTOP" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$KERNEL" ] || [ -z "$HEADERS" ] || [ -z "$BOARD" ]; then
-##########################################################################################################################
-info_text="HELP ME TO IMPROVE THIS PROGRAM\n\nSend an E-mail with suggestions to: byte4rr4y@gmail.com"
+info_text="                HELP ME TO IMPROVE THIS PROGRAM\n\nSend an E-mail with suggestions to: byte4rr4y@gmail.com"
 whiptail --title "Information" --msgbox "$info_text" 20 65
 ##########################################################################################################################
 whiptail --title "Menu" --menu "Choose a Debian Suite" 20 65 6 \
@@ -104,29 +99,44 @@ whiptail --title "Menu" --menu "Choose a Debian Suite" 20 65 6 \
 "4" "sid" \
 "5" "bookworm" \
 "6" "bullseye" 2> choice.txt
-choice=$(cat choice.txt)
+ret=$?
 
-case $choice in
-  1)
-    echo "SUITE=testing" > .config
+case $ret in
+  0) # OK
+    choice=$(cat choice.txt)
+    case $choice in
+      1)
+        echo "SUITE=testing" > .config
+        ;;
+      2)
+        echo "SUITE=experimental" > .config
+        ;;
+      3)
+        echo "SUITE=trixie" > .config
+        ;;
+      4)
+        echo "SUITE=sid" > .config
+        ;;
+      5)
+        echo "SUITE=bookworm" > .config
+        ;;
+      6)
+        echo "SUITE=bullseye" > .config
+        ;;
+      *)
+        echo "Invalid option"
+        ;;
+    esac
     ;;
-  2)
-    echo "SUITE=experimental" > .config
-    ;;
-  3)
-    echo "SUITE=trixie" > .config
-    ;;
-  4)
-    echo "SUITE=sid" > .config
-    ;;
-  5)
-    echo "SUITE=bookworm" > .config
-    ;;
-  6)
-    echo "SUITE=bullseye" > .config
+  1) # Cancel
+    echo "Cancelled by user"
+    rm choice.txt
+    exit 1
     ;;
   *)
-    echo "Invalid option"
+    echo "An unexpected error occurred"
+    rm choice.txt
+    exit 1
     ;;
 esac
 
@@ -139,6 +149,10 @@ whiptail --title "Menu" --menu "Choose a board" 20 65 6 \
 "4" "rock4se" \
 "5" "rock5a" \
 "6" "rock5b" 2> choice.txt
+ret=$?
+
+case $ret in
+  0) # OK
 choice=$(cat choice.txt)
 
 case $choice in
@@ -167,12 +181,27 @@ case $choice in
     echo "Invalid option"
     ;;
 esac
-
+    ;;
+  1) # Cancel
+    echo "Cancelled by user"
+    rm choice.txt
+    exit 1
+    ;;
+  *)
+    echo "An unexpected error occurred"
+    rm choice.txt
+    exit 1
+    ;;
+esac
 rm choice.txt
 ##########################################################################################################################
 whiptail --title "Menu" --menu "Choose Kernel to install" 20 65 6 \
 "1" "Standardkernel of the Debian Suite" \
 "2" "Download and compile latest availible Kernel" 2> choice.txt
+ret=$?
+
+case $ret in
+  0) # OK
 choice=$(cat choice.txt)
 
 case $choice in
@@ -186,27 +215,21 @@ case $choice in
     echo "Invalid option"
     ;;
 esac
-
-rm choice.txt
-##########################################################################################################################
-whiptail --title "Menu" --menu "KERNEL HEADERS" 20 65 6 \
-"1" "Install Kernel headers" \
-"2" "Do not install Kernel headers" 2> choice.txt
-choice=$(cat choice.txt)
-
-case $choice in
-  1)
-    echo "HEADERS=yes" >> .config
     ;;
-  2)
-    echo "HEADERS=no" >> .config
+  1) # Cancel
+    echo "Cancelled by user"
+    rm choice.txt
+    exit 1
     ;;
   *)
-    echo "Invalid option"
+    echo "An unexpected error occurred"
+    rm choice.txt
+    exit 1
     ;;
 esac
-
 rm choice.txt
+##########################################################################################################################
+HEADERS=yes
 ##########################################################################################################################
 whiptail --title "Menu" --menu "Choose a Desktop option" 20 65 10 \
 "1" "none" \
@@ -219,6 +242,10 @@ whiptail --title "Menu" --menu "Choose a Desktop option" 20 65 10 \
 "8" "unity" \
 "9" "budgie" \
 "10" "kde" 2> choice.txt
+ret=$?
+
+case $ret in
+  0) # OK
 choice=$(cat choice.txt)
 
 case $choice in
@@ -256,6 +283,18 @@ case $choice in
     echo "Invalid option"
     ;;
 esac
+    ;;
+  1) # Cancel
+    echo "Cancelled by user"
+    rm choice.txt
+    exit 1
+    ;;
+  *)
+    echo "An unexpected error occurred"
+    rm choice.txt
+    exit 1
+    ;;
+esac
 rm choice.txt
 ##########################################################################################################################    
 
@@ -270,7 +309,10 @@ echo "PASSWORD=${PASSWORD}" >> .config
 whiptail --title "Menu" --menu "Choose an option" 20 65 4 \
 "1" "Just build with the given configuration" \
 "2" "Start interactive shell in the container" 2> choice.txt
+ret=$?
 
+case $ret in
+  0) # OK
 choice=$(cat choice.txt)
 
 case $choice in
@@ -284,13 +326,25 @@ case $choice in
     echo "Invalid option"
     ;;
 esac
+    ;;
+  1) # Cancel
+    echo "Cancelled by user"
+    rm choice.txt
+    exit 1
+    ;;
+  *)
+    echo "An unexpected error occurred"
+    rm choice.txt
+    exit 1
+    ;;
+esac
 rm choice.txt
 ##########################################################################################################################
 while IFS='=' read -r key value; do
     case "$key" in
-    	SUITE)
-    		SUITE="$value"
-    		;;
+    	  SUITE)
+    		    SUITE="$value"
+    		    ;;
         BOARD)
             BOARD="$value"
             ;;
@@ -425,6 +479,9 @@ if [[ "$BUILD" == "yes" ]]; then
     rm .loop/root/.dockerenv
     cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/vmlinuz
     cp .loop/root/boot/initrd* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/initrd.img
+    if [ "$KERNEL" == "standard" ]; then
+      rm .loop/root/boot/kernerlupdater.sh
+    fi
     umount .loop/root
 
     e2fsck -f ${ROOTFS}
@@ -437,6 +494,29 @@ if [[ "$BUILD" == "yes" ]]; then
     zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
     chown -R ${SUDO_USER}:${SUDO_USER} output/
     rm -rf .loop/root .loop/ .rootfs.img .rootfs.tar "${ROOTFS}.gz"
+    SDCARD="output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
+    available_cpus=$(nproc)
+    max_cpus=8
+    if ((available_cpus > max_cpus)); then
+      CPUS=$max_cpus
+    else
+      CPUS=$available_cpus
+    fi
+    sudo qemu-system-aarch64  \
+      -M virt \
+      -cpu cortex-a76 -smp $CPUS \
+      -m 2048 \
+      -kernel "$(dirname "$SDCARD")/.qemu/"vmlinuz \
+      -initrd "$(dirname "$SDCARD")/.qemu/"initrd.img \
+      -drive if=none,file=${SDCARD},format=raw,id=disk \
+      -bios /usr/lib/u-boot/qemu_arm64/u-boot.bin \
+      -append "root=LABEL=rootfs rw" \
+      -device virtio-blk-device,drive=disk \
+      -device virtio-keyboard-pci \
+      -netdev user,id=net0 \
+      -device virtio-net-pci,netdev=net0 \
+      -device virtio-mouse-pci -nographic
+    rm -rf "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu"
 ##########################################################################################################################
     filesize=$(stat -c %s "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img")
     if [ $filesize -gt 1073741824 ]; then

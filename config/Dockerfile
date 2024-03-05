@@ -90,20 +90,17 @@ RUN chmod +x /etc/init.d/resize2fs
 COPY config/rc.local /etc
 
 RUN echo "if [ -e /etc/emulation ]; then" >> /etc/rc.local
-##########################################################
-##                task-rock-"EINFUEGEN"
-##########################################################
 RUN if [[ $BOARD == "rock3a" ]]; then \
     echo 'yes "y" | apt install -y task-rock-3a' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4b" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    echo 'yes "y" | apt install -y task-rock-4b' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4c" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    echo 'yes "y" | apt install -y task-rock-4c' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4cplus" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    echo 'yes "y" | apt install -y task-rock-4c' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4se" ]]; then \
     echo 'yes "y" | apt install -y task-rock-4se' >> /etc/rc.local  \

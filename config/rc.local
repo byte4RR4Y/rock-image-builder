@@ -16,4 +16,5 @@ if [ -e /etc/default/FIRSTBOOT ]; then
   touch /etc/resizeroot
   rm /etc/firstboot
 fi
-exit 0
+
+

@@ -87,9 +87,43 @@ RUN if [ "$KERNEL" = "standard" -a "$HEADERS" = "yes" ]; then \
 COPY config/resize2fs /etc/init.d/
 RUN chmod +x /etc/init.d/resize2fs
 
-RUN touch /etc/configboot
-
 COPY config/rc.local /etc
+
+RUN echo "if [ -e /etc/emulation ]; then" >> /etc/rc.local
+##########################################################
+##                task-rock-"EINFUEGEN"
+##########################################################
+RUN if [[ $BOARD == "rock3a" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-3a' >> /etc/rc.local \
+    ; fi
+RUN if [[ $BOARD == "rock4b" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    ; fi
+RUN if [[ $BOARD == "rock4c" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    ; fi
+RUN if [[ $BOARD == "rock4cplus" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-EINFUEGEN' >> /etc/rc.local \
+    ; fi
+RUN if [[ $BOARD == "rock4se" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-4se' >> /etc/rc.local  \
+    ; fi
+RUN if [[ $BOARD == "rock5a" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-5a' >> /etc/rc.local \
+    ; fi
+RUN if [[ $BOARD == "rock5b" ]]; then \
+    echo 'yes "y" | apt install -y task-rock-5b' >> /etc/rc.local \
+    ; fi
+
+RUN echo "touch /etc/configboot" >> /etc/rc.local
+RUN echo "poweroff" >> /etc/rc.local
+RUN echo "rm /etc/emulation" >> /etc/rc.local
+RUN echo "fi" >> /etc/rc.local
+RUN echo "iwconfig wlan0 txpower 20"
+RUN echo "exit 0" >> /etc/rc.local
+RUN chmod +x /etc/rc.local
+RUN touch /etc/emulation
+
 COPY config/kernelupdater.sh /boot
 RUN chmod +x /boot/kernelupdater.sh
 

@@ -30,7 +30,7 @@ boardlist() {
     echo "rock3a"
     echo "rock4b"
     echo "rock4c"
-    echo "rock4c plus"
+    echo "rock4cplus"
     echo "rock4se"
     echo "rock5a"
     echo "rock5b"

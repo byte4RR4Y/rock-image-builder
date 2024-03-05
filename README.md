@@ -12,8 +12,6 @@ Image builder for radxa Borads
   - rock 5a
   - rock 5b
 
-### All the builds for this boards should work if you install the latest availible Kernel
-
 # INSTALLATION:
 ------------------------------------------------------------
      git clone https://github.com/byte4RR4Y/rock-image-builder

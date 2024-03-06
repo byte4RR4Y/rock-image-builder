@@ -29,6 +29,7 @@ boardlist() {
     echo "====================="
     echo "rock3a"
     echo "rock4b"
+    echo "rock4bplus"
     echo "rock4c"
     echo "rock4cplus"
     echo "rock4se"
@@ -475,10 +476,10 @@ if [[ "$BUILD" == "yes" ]]; then
     tar -xvf .rootfs.tar -C .loop/root
     
     docker kill debiancontainer
-    mkdir -p output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu
+    mkdir -p output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu
     rm .loop/root/.dockerenv
-    cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/vmlinuz
-    cp .loop/root/boot/initrd* output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu/initrd.img
+    cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu/vmlinuz
+    cp .loop/root/boot/initrd* output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu/initrd.img
     if [ "$KERNEL" == "standard" ]; then
       rm .loop/root/boot/kernerlupdater.sh
     fi
@@ -486,15 +487,15 @@ if [[ "$BUILD" == "yes" ]]; then
 
     e2fsck -fvC 0 ${ROOTFS}
     gzip ${ROOTFS}
-    mkdir -p output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu
+    mkdir -p output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu
     RELEASE=$(cat config/release)
     if [ "$DESKTOP" == "none" ]; then
       DESKTOP="CLI"
     fi
-    zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
+    zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
     chown -R ${SUDO_USER}:${SUDO_USER} output/
     rm -rf .loop/root .loop/ .rootfs.img .rootfs.tar "${ROOTFS}.gz"
-    SDCARD="output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
+    SDCARD="output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
     available_cpus=$(nproc)
     max_cpus=8
     if ((available_cpus > max_cpus)); then
@@ -516,9 +517,9 @@ if [[ "$BUILD" == "yes" ]]; then
       -netdev user,id=net0 \
       -device virtio-net-pci,netdev=net0 \
       -device virtio-mouse-pci -nographic
-    rm -rf "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/.qemu"
+    rm -rf "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu"
 ##########################################################################################################################
-    filesize=$(stat -c %s "output/Debian-${SUITE}-${DESKTOP}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img")
+    filesize=$(stat -c %s "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img")
     if [ $filesize -gt 1073741824 ]; then
         echo "--------------------------------------"
         echo "CONGRATULATION, BUILD WAS SUCCESSFULL!"

@@ -92,28 +92,28 @@ COPY config/rc.local /etc
 RUN echo "if [ -e /etc/emulation ]; then" >> /etc/rc.local
 
 RUN if [[ $BOARD == "rock3a" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-3a' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-3a' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4b" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-4b' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-4b' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4b" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-4b-plus' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-4b-plus' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4c" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-4c' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-4c' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4cplus" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-4c' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-4c' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock4se" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-4se' >> /etc/rc.local  \
+    echo 'yes "n" | apt install -y task-rock-4se' >> /etc/rc.local  \
     ; fi
 RUN if [[ $BOARD == "rock5a" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-5a' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-5a' >> /etc/rc.local \
     ; fi
 RUN if [[ $BOARD == "rock5b" ]]; then \
-    echo 'yes "y" | apt install -y task-rock-5b' >> /etc/rc.local \
+    echo 'yes "n" | apt install -y task-rock-5b' >> /etc/rc.local \
     ; fi
 
 RUN echo "touch /etc/configboot" >> /etc/rc.local

@@ -146,10 +146,11 @@ rm choice.txt
 whiptail --title "Menu" --menu "Choose a board" 20 65 6 \
 "1" "rock3a" \
 "2" "rock4b(maybe also works for rock4a)" \
-"3" "rock4c" \
-"4" "rock4se" \
-"5" "rock5a" \
-"6" "rock5b" 2> choice.txt
+"3" "rock4bplus" \
+"4" "rock4c" \
+"5" "rock4se" \
+"6" "rock5a" \
+"7" "rock5b" 2> choice.txt
 ret=$?
 
 case $ret in
@@ -164,18 +165,21 @@ case $choice in
     echo "BOARD=rock4b" >> .config
     ;;
   3)
-    echo "BOARD=rock4c" >> .config
+    echo "BOARD=rock4bplus" >> .config
     ;;
   4)
-    echo "BOARD=rock4se" >> .config
+    echo "BOARD=rock4c" >> .config
     ;;
   5)
-    echo "BOARD=rock4cplus" >> .config
+    echo "BOARD=rock4se" >> .config
     ;;
   6)
-    echo "BOARD=rock5a" >> .config
+    echo "BOARD=rock4cplus" >> .config
     ;;
   7)
+    echo "BOARD=rock5a" >> .config
+    ;;
+  8)
     echo "BOARD=rock5b" >> .config
     ;;
   *)

@@ -48,7 +48,9 @@ You will find your image in the output folder.
 ## Board:
   - rock3a
   - rock4b (maybe works for rock4a)
+  - rock4bplus
   - rock4c
+  - rock4cplus
   - rock4se
   - rock5a
   - rock5b

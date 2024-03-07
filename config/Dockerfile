@@ -75,6 +75,10 @@ RUN chsh -s /bin/zsh root
 
 RUN echo "root=LABEL=rootfs quiet splash loglevel=1 rw" > /etc/kernel/cmdline
 
+RUN echo '# /etc/default/zramswap' > /etc/default/zramswap
+RUN echo "ZRAM_SWAPSIZE=512M" >> /etc/default/zramswap
+RUN echo "ZRAM_ALGORITHM=lz4" >> /etc/default/zramswap
+
 RUN apt install -y kmod wireless-tools net-tools inetutils* initramfs-tools network-manager usbutils tar zip unzip bzip2 u-boot-menu pulseaudio pulseaudio-module-bluetooth ntpsec locales parted util-linux u-boot-tools firmware-brcm80211 iw wireless-regdb
 
 RUN if [ "$KERNEL" = "standard" ]; then \

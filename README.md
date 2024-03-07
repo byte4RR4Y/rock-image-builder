@@ -1,6 +1,8 @@
 # rock-image-builder - Daily updated
 Image builder for radxa Borads
 
+Now the kernel headers are in the right place
+
 # Please make use of the Issues and Discussions section
 
 ## Current supported Boards:
@@ -25,6 +27,8 @@ Image builder for radxa Borads
 # To build an SD-Card image:
     sudo ./build.sh
 Will guide you through a menu to choose all options.
+
+Wait until the QEMU emulation to install radxa drivers is finished.
 
 You will find your image in the output folder.
 

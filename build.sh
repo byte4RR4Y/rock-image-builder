@@ -234,8 +234,6 @@ esac
 esac
 rm choice.txt
 ##########################################################################################################################
-HEADERS=yes
-##########################################################################################################################
 whiptail --title "Menu" --menu "Choose a Desktop option" 20 65 10 \
 "1" "none" \
 "2" "xfce" \
@@ -428,7 +426,7 @@ if [[ "$BUILD" == "yes" ]]; then
 ##########################################################################################################################
     if [ "$KERNEL" == "latest" ]; then
       echo "0" > config/kernel_status
-      xfce4-terminal --title="Building Kernel" --command="config/makekernel.sh yes" &
+      xfce4-terminal --title="Building Kernel" --command="config/makekernel.sh" &
     fi
 ##########################################################################################################################    
     echo "Building Docker image..."

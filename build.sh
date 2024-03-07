@@ -428,7 +428,7 @@ if [[ "$BUILD" == "yes" ]]; then
 ##########################################################################################################################
     if [ "$KERNEL" == "latest" ]; then
       echo "0" > config/kernel_status
-      xfce4-terminal --title="Building Kernel" --command="config/makekernel.sh $HEADERS" &
+      xfce4-terminal --title="Building Kernel" --command="config/makekernel.sh yes" &
     fi
 ##########################################################################################################################    
     echo "Building Docker image..."
@@ -491,10 +491,12 @@ if [[ "$BUILD" == "yes" ]]; then
 
     e2fsck -fvC 0 ${ROOTFS}
     gzip ${ROOTFS}
-    mkdir -p output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu
     RELEASE=$(cat config/release)
     if [ "$DESKTOP" == "none" ]; then
       DESKTOP="CLI"
+    fi
+    if [ "$KERNEL" == "standard"]; then
+      RELEASE=standard
     fi
     zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
     chown -R ${SUDO_USER}:${SUDO_USER} output/
@@ -507,10 +509,25 @@ if [[ "$BUILD" == "yes" ]]; then
     else
       CPUS=$available_cpus
     fi
+    if [ "$BOARD" == "rock4b" ]; then
+      CPU=cortex-a72
+    elif [ "$BOARD" == "rock4bplus" ]; then
+      CPU=cortex-a72
+    elif [ "$BOARD" == "rock4c" ]; then
+      CPU=cortex-a72
+    elif [ "$BOARD" == "rock4cplus" ]; then
+      CPU=cortex-a72
+    elif [ "$BOARD" == "rock4se" ]; then
+      CPU=cortex-a72
+    elif [ "$BOARD" == "rock5a" ]; then
+      CPU=cortex-a76
+    elif [ "$BOARD" == "rock5a" ]; then
+      CPU=cortex-a76
+    fi
     sudo qemu-system-aarch64  \
       -M virt \
-      -cpu cortex-a76 -smp $CPUS \
-      -m 2048 \
+      -cpu $CPU -smp $CPUS \
+      -m 4096 \
       -kernel "$(dirname "$SDCARD")/.qemu/"vmlinuz \
       -initrd "$(dirname "$SDCARD")/.qemu/"initrd.img \
       -drive if=none,file=${SDCARD},format=raw,id=disk \
@@ -520,8 +537,7 @@ if [[ "$BUILD" == "yes" ]]; then
       -device virtio-keyboard-pci \
       -netdev user,id=net0 \
       -device virtio-net-pci,netdev=net0 \
-      -device virtio-mouse-pci -nographic
-    rm -rf "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu"
+      -device virtio-mouse-pci -nographic -no-reboot
 ##########################################################################################################################
     filesize=$(stat -c %s "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img")
     if [ $filesize -gt 1073741824 ]; then

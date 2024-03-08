@@ -498,7 +498,7 @@ if [[ "$BUILD" == "yes" ]]; then
     if [ "$DESKTOP" == "none" ]; then
       DESKTOP="CLI"
     fi
-    if [ "$KERNEL" == "standard"]; then
+    if [ "$KERNEL" == "standard" ]; then
       RELEASE=standard
     fi
     zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
@@ -524,7 +524,7 @@ if [[ "$BUILD" == "yes" ]]; then
       CPU=cortex-a72
     elif [ "$BOARD" == "rock5a" ]; then
       CPU=cortex-a76
-    elif [ "$BOARD" == "rock5a" ]; then
+    elif [ "$BOARD" == "rock5b" ]; then
       CPU=cortex-a76
     fi
     sudo qemu-system-aarch64  \

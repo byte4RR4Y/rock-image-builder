@@ -434,6 +434,7 @@ if [[ "$BUILD" == "yes" ]]; then
     docker kill debiancontainer
     docker rm debiancontainer
     docker rmi debian:finest
+    HEADERS="yes"
     docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL --build-arg "HEADERS="$HEADERS -t debian:finest -f config/Dockerfile .
 ##########################################################################################################################    
     docker run --platform=aarch64 -dit --name debiancontainer debian:finest /bin/bash  

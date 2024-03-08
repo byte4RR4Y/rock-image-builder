@@ -3,9 +3,15 @@
 if [ -e /etc/configboot ]; then
   hostnamectl set-hostname rock4se
   chmod u+s /usr/bin/sudo
-  dpkg-reconfigure lightdm
-  dpkg-reconfigure sddm
-  dpkg-reconfigure gdm3
+  if dpkg-query -W "lightdm" >/dev/null 2>&1; then
+    dpkg-reconfigure lightdm
+  fi
+  if dpkg-query -W "sddm" >/dev/null 2>&1; then
+    dpkg-reconfigure sddm
+  fi
+  if dpkg-query -W "gdm3" >/dev/null 2>&1; then
+    dpkg-reconfigure gdm3
+  fi
   rm /etc/configboot
   touch /etc/default/FIRSTBOOT
   reboot

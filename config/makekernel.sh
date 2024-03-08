@@ -18,8 +18,8 @@ yes "" | make -j ${CPUS} ARCH=arm64 KERNELRELEASE="${BUILD}" CROSS_COMPILE=aarch
 
 
 env PATH=$PATH make KERNELRELEASE="${BUILD}" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=${KERNELDIR} modules_install
-mkdir -p ${KERNELDIR}/usr
-make headers_install INSTALL_HDR_PATH=${KERNELDIR}/usr/
+mkdir -p ${KERNELDIR}/usr/src/linux-headers-${BUILD}
+make headers_install INSTALL_HDR_PATH=${KERNELDIR}/usr/src/linux-headers-${BUILD}
 mkdir -p "${KERNELDIR}/boot/" "${KERNELDIR}/lib/linux-image-${BUILD}/"rockchip/
 echo "ffffffffffffffff B The real System.map is in the linux-image-<version>-dbg package" > "${KERNELDIR}/boot/System.map-${BUILD}"
 cp .config "${KERNELDIR}/boot/config-${BUILD}"

@@ -5,11 +5,9 @@ ARG ADDITIONAL
 ARG USERNAME
 ARG PASSWORD
 ARG KERNEL
-ARG HEADERS
 ARG BOARD
 
 ENV BOARD=$BOARD
-ENV HEADERS=$HEADERS
 ENV KERNEL=$KERNEL
 ENV DESKTOP=$DESKTOP
 ENV ADDITIONAL=$ADDITIONAL
@@ -79,9 +77,9 @@ RUN echo '# /etc/default/zramswap' > /etc/default/zramswap
 RUN echo "ZRAM_SWAPSIZE=512M" >> /etc/default/zramswap
 RUN echo "ZRAM_ALGORITHM=lz4" >> /etc/default/zramswap
 
-RUN apt install -y kmod wireless-tools net-tools inetutils* initramfs-tools network-manager usbutils tar zip unzip bzip2 u-boot-menu pulseaudio pulseaudio-module-bluetooth ntpsec locales parted util-linux u-boot-tools firmware-brcm80211 iw wireless-regdb
+RUN apt install -y kmod dkms wireless-tools net-tools inetutils* initramfs-tools network-manager usbutils tar zip unzip bzip2 u-boot-menu pulseaudio pulseaudio-module-bluetooth ntpsec locales parted util-linux u-boot-tools firmware-brcm80211 iw wireless-regdb
 
-RUN if [ "$KERNEL" = "standard" ]; then \
+RUN if [[ "$KERNEL" = "standard" ]]; then \
         apt install -y linux-image-arm64 linux-headers-arm64\
     ; fi
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE=$(date +%s)
+
 INTERACTIVE=no
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 BUILD=no
@@ -432,9 +432,9 @@ if [[ "$BUILD" == "yes" ]]; then
 ##########################################################################################################################    
     echo "Building Docker image..."
     sleep 1
-    docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL -t ${IMAGE}:latest -f config/Dockerfile .
+    docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL -t debiancontainer:latest -f config/Dockerfile .
 ##########################################################################################################################    
-    docker run --platform=aarch64 -dit --name ${IMAGE} debian:finest /bin/bash  
+    docker run --platform=aarch64 -dit --name debiancontainer debian:finest /bin/bash  
 
     if [ "$KERNEL" == "latest" ]; then
       echo "Waiting for Kernel compilation..."
@@ -442,29 +442,29 @@ if [[ "$BUILD" == "yes" ]]; then
         sleep 2
       done
       rm config/kernel_status
-      docker cp kernel*.zip ${IMAGE}:/
-      docker cp config/installkernel.sh ${IMAGE}:/
-      docker exec ${IMAGE} bash -c '/installkernel.sh kernel-*.zip'
-      docker exec ${IMAGE} bash -c 'rm -rf /kernel*.zip'
-      docker exec ${IMAGE} bash -c 'rm /installkernel.sh'
-      docker exec ${IMAGE} bash -c 'u-boot-update'
+      docker cp kernel*.zip debiancontainer:/
+      docker cp config/installkernel.sh debiancontainer:/
+      docker exec debiancontainer bash -c '/installkernel.sh kernel-*.zip'
+      docker exec debiancontainer bash -c 'rm -rf /kernel*.zip'
+      docker exec debiancontainer bash -c 'rm /installkernel.sh'
+      docker exec debiancontainer bash -c 'u-boot-update'
       rm kernel-*.zip
     else
       echo "standard" > config/release
     fi
 
-    docker cp config/resizeroot ${IMAGE}:/usr/local/bin
-    docker exec ${IMAGE} bash -c 'chmod +x /usr/local/bin/resizeroot'
+    docker cp config/resizeroot debiancontainer:/usr/local/bin
+    docker exec debiancontainer bash -c 'chmod +x /usr/local/bin/resizeroot'
     
 ##########################################################################################################################    
     if [[ "$INTERACTIVE" == "yes" ]]; then
-        docker attach ${IMAGE}
-        docker start ${IMAGE}       
+        docker attach debiancontainer
+        docker start debiancontainer       
     fi
 ##########################################################################################################################    
-    docker cp ${IMAGE}:/rootfs_size.txt config/
+    docker cp debiancontainer:/rootfs_size.txt config/
     ROOTFS=.rootfs.img
-    if [ "$KERNEL" == "standard" ]; then
+    if [[ "$KERNEL" == "standard" ]]; then
       reserved=450
     else
       reserved=1200
@@ -477,12 +477,12 @@ if [[ "$BUILD" == "yes" ]]; then
     mkfs.ext4 ${ROOTFS} -L rootfs -F
     mkdir -p .loop/root
     mount ${ROOTFS} .loop/root
-    docker export -o .rootfs.tar ${IMAGE}
+    docker export -o .rootfs.tar debiancontainer
     tar -xvf .rootfs.tar -C .loop/root
     
-    docker kill ${IMAGE}
-    docker rm ${IMAGE}
-    docker rmi ${IMAGE}:latest
+    docker kill debiancontainer
+    docker rm debiancontainer
+    docker rmi debiancontainer:latest
     mkdir -p output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu
     rm .loop/root/.dockerenv
     cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu/vmlinuz
@@ -513,19 +513,19 @@ if [[ "$BUILD" == "yes" ]]; then
       CPUS=$available_cpus
     fi
     if [ "$BOARD" == "rock4b" ]; then
-      CPU=cortex-a72
+      CPU="cortex-a72"
     elif [ "$BOARD" == "rock4bplus" ]; then
-      CPU=cortex-a72
+      CPU="cortex-a72"
     elif [ "$BOARD" == "rock4c" ]; then
-      CPU=cortex-a72
+      CPU="cortex-a72"
     elif [ "$BOARD" == "rock4cplus" ]; then
-      CPU=cortex-a72
+      CPU="cortex-a72"
     elif [ "$BOARD" == "rock4se" ]; then
-      CPU=cortex-a72
+      CPU="cortex-a72"
     elif [ "$BOARD" == "rock5a" ]; then
-      CPU=cortex-a76
+      CPU="cortex-a76"
     elif [ "$BOARD" == "rock5b" ]; then
-      CPU=cortex-a76
+      CPU="cortex-a76"
     fi
     sudo qemu-system-aarch64  \
       -M virt \

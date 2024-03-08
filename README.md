@@ -64,7 +64,7 @@ You will find your image in the output folder.
   - Lates availible Linux Kernel (Downloaded and Compiled)
 
 ## Kernelheaders
-  - Install it(recommended) or not
+  - Installed automaticly
 
 ## Currently supported desktops:
   - none(Command line interface/tested)
@@ -89,7 +89,6 @@ Type './build.sh -h'
     -B, --board                     Choose the Radxa Board
     --boardlist                     Show availible Boards
     -k, --kernel latest/standard    Choose which kernel to install
-    -H, --headers yes/no            Install Kernelheaders
     -d, --desktop DESKTOP           Choose the desktop environment (e.g., xfce4, kde, none)
     -i, --interactive yes/no        Start an interactive shell in the docker container (yes/no)
                                     This only has an effect in kombination with -d or --desktop
@@ -100,7 +99,7 @@ Type './build.sh -h'
 
 For example to build Debian testing with XFCE with latest Kernel:
 ---------------------------------------------------
-     sudo ./build -s testing -B rock4se -d xfce4 -k latest -H no -u debian -p 123456 -i no -b
+     sudo ./build -s testing -B rock4se -d xfce4 -k latest -u debian -p 123456 -i no -b
 ---------------------------------------------------
 
 

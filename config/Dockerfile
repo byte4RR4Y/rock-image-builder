@@ -79,8 +79,8 @@ RUN echo "ZRAM_ALGORITHM=lz4" >> /etc/default/zramswap
 
 RUN apt install -y kmod dkms wireless-tools net-tools inetutils* initramfs-tools network-manager usbutils tar zip unzip bzip2 u-boot-menu pulseaudio pulseaudio-module-bluetooth ntpsec locales parted util-linux u-boot-tools firmware-brcm80211 iw wireless-regdb
 
-RUN if [[ "$KERNEL" = "standard" ]]; then \
-        apt install -y linux-image-arm64 linux-headers-arm64\
+RUN if [[ "$KERNEL" == "standard" ]]; then \
+        apt install -y linux-image-arm64 linux-headers-arm64 \
     ; fi
 
 COPY config/resize2fs /etc/init.d/
@@ -89,7 +89,7 @@ RUN chmod +x /etc/init.d/resize2fs
 COPY config/rc.local /etc
 
 RUN echo "if [ -e /etc/emulation ]; then" >> /etc/rc.local
-
+RUN echo "export C_INCLUDE_PATH=/usr/include" >> /etc/rc.local
 RUN if [[ $BOARD == "rock3a" ]]; then \
     echo 'yes "n" | apt install -y task-rock-3a' >> /etc/rc.local \
     ; fi
@@ -128,7 +128,10 @@ COPY config/kernelupdater.sh /boot
 RUN chmod +x /boot/kernelupdater.sh
 
 RUN chmod +x /etc/rc.local
-
+RUN sed -i 's/MODULES=most/& fsck e2fsck/' /etc/initramfs-tools/initramfs.conf
+RUN echo 'BINARIES="/bin /sbin /usr/sbin"' | sudo tee -a /etc/initramfs-tools/initramfs.conf
 RUN apt autoremove -y && apt autoclean
-
+RUN if [[ $KERNEL == "latest" ]]; then \
+    echo 'export C_INCLUDE_PATH=/usr/include' >> /home/${USERNAME}/.zshrc \
+    ; fi
 RUN echo $(($(du -s -m --exclude=/proc --exclude=/sys --exclude=/dev / | awk '{print $1}'))) > /rootfs_size.txt

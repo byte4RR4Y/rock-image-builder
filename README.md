@@ -13,7 +13,7 @@ Now the kernel headers are in the right place
   - rock 4c plus 
   - rock 4se (extensivly tested, works great)
   - rock 5a
-  - rock 5b
+  - rock 5b (works with standard Kernel)
 
 # INSTALLATION:
 ------------------------------------------------------------

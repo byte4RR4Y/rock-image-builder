@@ -116,8 +116,8 @@ RUN if [[ $BOARD == "rock5b" ]]; then \
     ; fi
 
 RUN echo "touch /etc/configboot" >> /etc/rc.local
-RUN echo "poweroff" >> /etc/rc.local
 RUN echo "rm /etc/emulation" >> /etc/rc.local
+RUN echo "poweroff" >> /etc/rc.local
 RUN echo "fi" >> /etc/rc.local
 RUN echo "iwconfig wlan0 txpower 20"
 RUN echo "exit 0" >> /etc/rc.local

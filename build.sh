@@ -460,7 +460,7 @@ if [[ "$BUILD" == "yes" ]]; then
     docker cp debiancontainer:/rootfs_size.txt config/
     ROOTFS=.rootfs.img
     if [[ "$KERNEL" == "standard" ]]; then
-      reserved=400
+      reserved=1000
     else
       reserved=1300
     fi

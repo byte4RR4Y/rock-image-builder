@@ -427,7 +427,6 @@ if [[ "$BUILD" == "yes" ]]; then
     fi
 ##########################################################################################################################    
     echo "Building Docker image..."
-    sleep 10
     docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL -t debian:finest -f config/Dockerfile .
 ##########################################################################################################################    
     docker run --platform=aarch64 -dit --name debiancontainer debian:finest /bin/bash  

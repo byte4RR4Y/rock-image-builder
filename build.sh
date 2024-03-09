@@ -83,11 +83,7 @@ echo "----------------------"
 echo "cleaning build area..."
 echo "----------------------"
 sleep 2
-rm .config
-rm .rootfs.img
-rm .rootfs.tar
 rm -rf .rootfs/
-rm config/rootfs_size.txt
 echo ""
 if [ -z "$SUITE" ] || [ -z "$DESKTOP" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$KERNEL" ] || [ -z "$BOARD" ]; then
 ##########################################################################################################################
@@ -380,7 +376,7 @@ if [ "$BUILD" == "no" ]; then
 ##########################################################################################################################
     display_variables() {
         whiptail --title "Is this configuration correct?" --yesno \
-        "SUITE=$SUITE\nBoard=$BOARD\nKERNEL=$KERNEL\nHEADERS=$HEADERS\nDESKTOP=$DESKTOP\nUSERNAME=$USERNAME\nPASSWORD=$PASSWORD\nINTERACTIVE=$INTERACTIVE" \
+        "SUITE=$SUITE\nBoard=$BOARD\nKERNEL=$KERNEL\nDESKTOP=$DESKTOP\nUSERNAME=$USERNAME\nPASSWORD=$PASSWORD\nINTERACTIVE=$INTERACTIVE" \
         20 65
     }
 
@@ -431,8 +427,8 @@ if [[ "$BUILD" == "yes" ]]; then
     fi
 ##########################################################################################################################    
     echo "Building Docker image..."
-    sleep 1
-    docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL -t debiancontainer:latest -f config/Dockerfile .
+    sleep 10
+    docker build --build-arg "SUITE="$SUITE --build-arg "BOARD="$BOARD --build-arg "DESKTOP="$DESKTOP --build-arg "USERNAME="$USERNAME --build-arg "PASSWORD="$PASSWORD --build-arg "KERNEL="$KERNEL -t debian:finest -f config/Dockerfile .
 ##########################################################################################################################    
     docker run --platform=aarch64 -dit --name debiancontainer debian:finest /bin/bash  
 
@@ -465,9 +461,9 @@ if [[ "$BUILD" == "yes" ]]; then
     docker cp debiancontainer:/rootfs_size.txt config/
     ROOTFS=.rootfs.img
     if [[ "$KERNEL" == "standard" ]]; then
-      reserved=450
+      reserved=400
     else
-      reserved=1200
+      reserved=1300
     fi
     rootfs_size=$(cat config/rootfs_size.txt)
     echo "Creating an empty rootfs image..."
@@ -487,9 +483,7 @@ if [[ "$BUILD" == "yes" ]]; then
     rm .loop/root/.dockerenv
     cp .loop/root/boot/vmlinuz* output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu/vmlinuz
     cp .loop/root/boot/initrd* output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/.qemu/initrd.img
-    if [ "$KERNEL" == "standard" ]; then
-      rm .loop/root/boot/kernerlupdater.sh
-    fi
+    
     umount .loop/root
 
     e2fsck -fvC 0 ${ROOTFS}
@@ -502,7 +496,6 @@ if [[ "$BUILD" == "yes" ]]; then
       RELEASE=standard
     fi
     zcat config/${BOOTLOADER} ${ROOTFS}.gz > "output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
-    chown -R ${SUDO_USER}:${SUDO_USER} output/
     rm -rf .loop/root .loop/ .rootfs.img .rootfs.tar "${ROOTFS}.gz"
     SDCARD="output/Debian-${SUITE}-${DESKTOP}-${BOARD}-build-${TIMESTAMP}/Debian-${SUITE}-${DESKTOP}-Kernel-${RELEASE}.img"
     available_cpus=$(nproc)
@@ -552,5 +545,6 @@ if [[ "$BUILD" == "yes" ]]; then
         echo "SORRY, BUILD WAS NOT SUCCESSFULL"
         echo "--------------------------------"
     fi
+    chown -R ${SUDO_USER}:${SUDO_USER} ./
     rm config/release
 fi

@@ -61,7 +61,7 @@ RUN bash -c 'tee /etc/apt/sources.list.d/radxa.list <<< "deb [signed-by=/usr/sha
 RUN apt update -y && apt install -y radxa-firmware
 
 RUN useradd -m -s /bin/bash ${USERNAME}
-RUN echo "${PASSWORD}:${PASSWORD}" | chpasswd
+RUN echo "${USERNAME}:${PASSWORD}" | chpasswd
 RUN usermod -aG sudo ${USERNAME}
 COPY config/.zshrc /home/${USERNAME}
 
